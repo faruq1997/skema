@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Skema Penawaran Layanan</title>
+    <!-- Tailwind CSS CDN untuk styling yang cepat dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Latar belakang abu-abu muda */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .presentation-container {
+            background-color: #ffffff;
+            border-radius: 20px; /* Sudut lebih membulat */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Bayangan lebih dalam */
+            overflow: hidden;
+            width: 100%;
+            max-width: 1024px; /* Lebar maksimum lebih besar */
+            min-height: 650px; /* Tinggi minimum lebih besar */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .slide {
+            padding: 50px; /* Padding lebih besar */
+            flex-grow: 1;
+            display: none; /* Sembunyikan semua slide secara default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.7s ease-in-out; /* Transisi lebih halus */
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .slide-content {
+            max-width: 900px; /* Konten lebih lebar */
+            width: 100%;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 25px 50px; /* Padding lebih besar */
+            border-top: 1px solid #e2e8f0;
+            background-color: #f8fafc; /* Latar belakang navigasi */
+        }
+        .nav-button {
+            background-color: #4f46e5; /* Ungu indigo */
+            color: white;
+            padding: 14px 28px; /* Padding lebih besar */
+            border-radius: 10px; /* Sudut lebih membulat */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Transisi untuk semua properti */
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3); /* Bayangan dengan warna tombol */
+            letter-spacing: 0.025em; /* Spasi huruf */
+        }
+        .nav-button:hover {
+            background-color: #4338ca; /* Ungu lebih gelap saat hover */
+            transform: translateY(-2px); /* Efek angkat */
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.4);
+        }
+        .nav-button:disabled {
+            background-color: #a78bfa; /* Abu-abu keunguan saat disabled */
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+        .table-link {
+            color: #4f46e5;
+            text-decoration: none; /* Hilangkan underline default */
+            cursor: pointer;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .table-link:hover {
+            background-color: #e0e7ff; /* Latar belakang terang saat hover */
+            color: #3730a3; /* Warna teks lebih gelap */
+        }
+        /* Styling untuk tabel perbandingan */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate; /* Gunakan separate untuk border-radius */
+            border-spacing: 0; /* Hilangkan spasi antar sel */
+            margin-top: 20px;
+            border-radius: 12px; /* Sudut membulat untuk tabel */
+            overflow: hidden; /* Penting untuk border-radius */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #e2e8f0;
+            padding: 15px; /* Padding lebih besar */
+            text-align: left;
+            transition: background-color 0.2s ease;
+        }
+        .comparison-table th {
+            background-color: #f1f5f9; /* Latar belakang header lebih gelap */
+            font-weight: 700; /* Lebih tebal */
+            color: #334155;
+            border-top: none; /* Hilangkan border atas untuk tampilan bersih */
+        }
+        .comparison-table th:first-child { border-top-left-radius: 12px; }
+        .comparison-table th:last-child { border-top-right-radius: 12px; }
+        .comparison-table tr:nth-child(even) {
+            background-color: #fcfdff; /* Warna baris genap lebih terang */
+        }
+        .comparison-table tr:hover {
+            background-color: #eef2ff; /* Efek hover lebih jelas */
+        }
+        .comparison-table td:first-child {
+            font-weight: 500; /* Fitur lebih menonjol */
+            color: #475569;
+        }
+
+        /* Responsiveness for smaller screens */
+        @media (max-width: 768px) {
+            .presentation-container {
+                min-height: auto;
+                padding: 10px;
+            }
+            .slide {
+                padding: 30px 20px; /* Padding disesuaikan */
+            }
+            .navigation-buttons {
+                padding: 15px 20px;
+            }
+            .nav-button {
+                padding: 10px 18px;
+                font-size: 0.9em;
+            }
+            .comparison-table, .comparison-table tbody, .comparison-table td, .comparison-table th, .comparison-table tr {
+                display: block;
+                width: 100%;
+            }
+            .comparison-table thead {
+                display: none;
+            }
+            .comparison-table tr {
+                margin-bottom: 15px;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px; /* Sudut lebih membulat */
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+            .comparison-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border: none; /* Hilangkan border antar sel di mode mobile */
+                border-bottom: 1px dashed #e2e8f0; /* Border putus-putus */
+            }
+            .comparison-table td:last-child {
+                border-bottom: none;
+            }
+            .comparison-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px; /* Lebih ke dalam */
+                width: calc(50% - 30px); /* Sesuaikan lebar */
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 700; /* Lebih tebal */
+                color: #334155;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="presentation-container">
+        <!-- Slide 1: Judul -->
+        <section id="slide1" class="slide active">
+            <div class="slide-content">
+                <h1 class="text-6xl font-extrabold text-indigo-700 mb-8 leading-tight">
+                    Penawaran Layanan <br>Pengembangan Aplikasi
+                </h1>
+                <p class="text-3xl text-gray-600 mb-12">
+                    Solusi Adaptif untuk Pertumbuhan Bisnis Anda
+                </p>
+                <img src="https://placehold.co/500x300/6366f1/ffffff?text=Solusi+Digital+Inovatif" alt="Ilustrasi Solusi Digital Inovatif" class="mx-auto rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+            </div>
+        </section>
+
+        <!-- Slide 2: Pendahuluan - Mengapa Memilih Kami? -->
+        <section id="slide2" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-10">Mengapa Memilih Kami?</h2>
+                <ul class="text-2xl text-gray-700 space-y-6 list-none p-0 mb-10">
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">✔</span>
+                        <strong class="text-indigo-700">Pengalaman Teruji:</strong> Rekam jejak dalam pengembangan aplikasi inovatif.
+                    </li>
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">⭐</span>
+                        <strong class="text-indigo-700">Kualitas Terjamin:</strong> Komitmen pada standar kualitas tertinggi.
+                    </li>
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">⚙️</span>
+                        <strong class="text-indigo-700">Fleksibilitas Solusi:</strong> Penawaran yang dapat disesuaikan dengan kebutuhan unik bisnis Anda.
+                    </li>
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">🤝</span>
+                        <strong class="text-indigo-700">Dukungan Berkelanjutan:</strong> Mitra terpercaya untuk pertumbuhan jangka panjang.
+                    </li>
+                </ul>
+
+                <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left w-full">
+                    <h3 class="text-3xl font-bold text-indigo-700 mb-6 text-center">Portofolio Kami</h3>
+                    <p class="text-lg text-gray-700 mb-4 text-center">
+                        Kami memiliki pengalaman luas dalam mengembangkan berbagai solusi digital, termasuk:
+                    </p>
+                    <ul class="text-lg text-gray-800 space-y-2 list-disc list-inside">
+                        <li>Website Konferensi Internasional: <a href="https://icitri.nusamandiri.ac.id" target="_blank" class="text-indigo-500 hover:underline">icitri.nusamandiri.ac.id</a> (ICITRI Nusa Mandiri)</li>
+                        <li>Repository Citra Medis untuk Penelitian: <a href="https://repomed.nusamandiri.ac.id" target="_blank" class="text-indigo-500 hover:underline">repomed.nusamandiri.ac.id</a> (RepoMed Nusamandiri)</li>
+                        <li>Website Company Profile: <a href="https://sagiglobalschool.com" target="_blank" class="text-indigo-500 hover:underline">sagiglobalschool.com</a> (SAGI SD, SMP)</li>
+                        <li>Website Pengolahan Citra Medis dengan AI: <a href="https://medinftechai.com" target="_blank" class="text-indigo-500 hover:underline">medinftechai.com</a></li>
+                        <li>Startup Deteksi Hama Kentang Berbasis AI: <a href="https://matangdetect.com" target="_blank" class="text-indigo-500 hover:underline">matangdetect.com</a></li>
+                        <li>Startup Deteksi Citra Papsmear Berbasis Mobile Apps: <a href="https://smartcervix.com" target="_blank" class="text-indigo-500 hover:underline">smartcervix.com</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Sekilas Penawaran Layanan Kami -->
+        <section id="slide3" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-10">Sekilas Penawaran Layanan Kami</h2>
+                <p class="text-xl text-gray-700 mb-12">
+                    Kami memahami bahwa setiap bisnis memiliki kebutuhan unik. Oleh karena itu, kami menawarkan berbagai skema yang dapat disesuaikan dengan strategi dan anggaran Anda.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-center">
+                    <div class="p-8 bg-indigo-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2" onclick="showSlide('slide4')">
+                        <span class="text-indigo-600 text-5xl mb-4 block">📦</span>
+                        <h3 class="text-3xl font-semibold text-indigo-700 mb-2">Skema 1: One Stop</h3>
+                        <p class="text-gray-600 text-lg">Beli putus, kontrol penuh untuk tim internal.</p>
+                    </div>
+                    <div class="p-8 bg-indigo-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2" onclick="showSlide('slide5')">
+                        <span class="text-indigo-600 text-5xl mb-4 block">🛡️</span>
+                        <h3 class="text-3xl font-semibold text-indigo-700 mb-2">Skema 2: One Stop Controlled</h3>
+                        <p class="text-gray-600 text-lg">Beli putus, termasuk 1 tahun maintenance.</p>
+                    </div>
+                    <div class="p-8 bg-indigo-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2" onclick="showSlide('slide6')">
+                        <span class="text-indigo-600 text-5xl mb-4 block">📈</span>
+                        <h3 class="text-3xl font-semibold text-indigo-700 mb-2">Skema 3: Subscribe Mate</h3>
+                        <p class="text-gray-600 text-lg">Langganan bulanan, cocok untuk pertumbuhan berkelanjutan.</p>
+                    </div>
+                    <div class="p-8 bg-indigo-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2" onclick="showSlide('slide7')">
+                        <span class="text-indigo-600 text-5xl mb-4 block">💰</span>
+                        <h3 class="text-3xl font-semibold text-indigo-700 mb-2">Skema 4: Subscribe Friend</h3>
+                        <p class="text-gray-600 text-lg">Langganan hemat, dengan batasan transaksi harian.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Skema 1: One Stop -->
+        <section id="slide4" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-8">Skema 1: One Stop</h2>
+                <p class="text-2xl text-gray-700 mb-6 font-semibold">Kontrol Penuh di Tangan Anda</p>
+                <div class="bg-indigo-50 p-10 rounded-xl shadow-lg text-left">
+                    <ul class="text-xl text-gray-800 space-y-4">
+                        <li><strong class="text-indigo-700">Model:</strong> Beli putus (lisensi penuh).</li>
+                        <li><strong class="text-indigo-700">Deliverables:</strong> Semua program/kode sumber diserahkan sepenuhnya kepada klien.</li>
+                        <li><strong class="text-indigo-700">Dukungan:</strong> Bantuan instalasi awal (tidak termasuk penyediaan hosting).</li>
+                        <li><strong class="text-indigo-700">Cocok Untuk:</strong> Perusahaan dengan tim programmer internal yang ingin mengelola dan mengembangkan aplikasi secara mandiri.</li>
+                        <li><strong class="text-indigo-700">Estimasi Biaya:</strong> <span class="font-bold text-indigo-800">± Rp 50.000.000,-</span></li>
+                    </ul>
+                    <p class="mt-8 text-indigo-800 font-bold text-2xl">
+                        Keunggulan: Kepemilikan penuh, fleksibilitas pengembangan jangka panjang.
+                    </p>
+                </div>
+                <img src="https://placehold.co/300x200/6366f1/ffffff?text=Kontrol+Penuh" alt="Ilustrasi Kontrol Penuh" class="mx-auto mt-10 rounded-lg shadow-md">
+                <button class="nav-button mt-10" onclick="showSlide('slide8')">Lihat Perbandingan</button>
+            </div>
+        </section>
+
+        <!-- Slide 5: Skema 2: One Stop Controlled -->
+        <section id="slide5" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-8">Skema 2: One Stop Controlled</h2>
+                <p class="text-2xl text-gray-700 mb-6 font-semibold">Transisi Mulus dengan Dukungan</p>
+                <div class="bg-indigo-50 p-10 rounded-xl shadow-lg text-left">
+                    <ul class="text-xl text-gray-800 space-y-4">
+                        <li><strong class="text-indigo-700">Model:</strong> Beli putus dengan periode perawatan.</li>
+                        <li><strong class="text-indigo-700">Deliverables:</strong> Semua program/kode sumber diserahkan sepenuhnya.</li>
+                        <li><strong class="text-indigo-700">Dukungan:</strong> Termasuk <strong class="text-indigo-700">perawatan (maintenance) selama 1 tahun penuh</strong>.</li>
+                        <li><strong class="text-indigo-700">Cocok Untuk:</strong> Perusahaan yang belum memiliki programmer internal namun berencana untuk merekrut atau mengembangkan tim internal di masa mendatang.</li>
+                        <li><strong class="text-indigo-700">Estimasi Biaya:</strong> <span class="font-bold text-indigo-800">± Rp 60.000.000,-</span></li>
+                    </ul>
+                    <p class="mt-8 text-indigo-800 font-bold text-2xl">
+                        Keunggulan: Kepemilikan penuh, dukungan purna jual awal yang penting.
+                    </p>
+                </div>
+                <img src="https://placehold.co/300x200/6366f1/ffffff?text=Dukungan+1+Tahun" alt="Ilustrasi Dukungan 1 Tahun" class="mx-auto mt-10 rounded-lg shadow-md">
+                <button class="nav-button mt-10" onclick="showSlide('slide8')">Lihat Perbandingan</button>
+            </div>
+        </section>
+
+        <!-- Slide 6: Skema 3: Subscribe Mate -->
+        <section id="slide6" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-8">Skema 3: Subscribe Mate</h2>
+                <p class="text-2xl text-gray-700 mb-6 font-semibold">Pertumbuhan Tanpa Batas</p>
+                <div class="bg-indigo-50 p-10 rounded-xl shadow-lg text-left">
+                    <ul class="text-xl text-gray-800 space-y-4">
+                        <li><strong class="text-indigo-700">Model:</strong> Langganan bulanan.</li>
+                        <li><strong class="text-indigo-700">Durasi Minimal Awal:</strong> 9 bulan.</li>
+                        <li><strong class="text-indigo-700">Cakupan:</strong> Sudah termasuk <strong class="text-indigo-700">maintenance penuh dan penyesuaian fitur berkelanjutan</strong>.</li>
+                        <li><strong class="text-indigo-700">Cocok Untuk:</strong> Bisnis yang berorientasi pada pertumbuhan cepat dan membutuhkan fleksibilitas untuk terus mengembangkan fitur baru seiring dengan evolusi kebutuhan pasar.</li>
+                        <li><strong class="text-indigo-700">Biaya Bulanan:</strong> <span class="font-bold text-indigo-800">Rp 2.000.000,- / bulan</span></li>
+                        <li><strong class="text-indigo-700">Estimasi Biaya Harian:</strong> <span class="font-bold text-indigo-800">± Rp 80.000,- / hari</span> (berdasarkan 25 hari kerja)</li>
+                    </ul>
+                    <p class="mt-8 text-indigo-800 font-bold text-2xl">
+                        Keunggulan: Biaya awal lebih rendah, selalu up-to-date, tidak perlu mengkhawatirkan maintenance dan pengembangan.
+                    </p>
+                </div>
+                <img src="https://placehold.co/300x200/6366f1/ffffff?text=Pertumbuhan+Bisnis" alt="Ilustrasi Pertumbuhan Bisnis" class="mx-auto mt-10 rounded-lg shadow-md">
+                <button class="nav-button mt-10" onclick="showSlide('slide8')">Lihat Perbandingan</button>
+            </div>
+        </section>
+
+        <!-- Slide 7: Skema 4: Subscribe Friend -->
+        <section id="slide7" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-8">Skema 4: Subscribe Friend</h2>
+                <p class="text-2xl text-gray-700 mb-6 font-semibold">Solusi Hemat untuk Kebutuhan Dasar</p>
+                <div class="bg-indigo-50 p-10 rounded-xl shadow-lg text-left">
+                    <ul class="text-xl text-gray-800 space-y-4">
+                        <li><strong class="text-indigo-700">Model:</strong> Langganan bulanan dengan batasan.</li>
+                        <li><strong class="text-indigo-700">Durasi Minimal Awal:</strong> 6 bulan.</li>
+                        <li><strong class="text-indigo-700">Batasan:</strong> Limit 80 transaksi harian, data tidak <em class="font-italic">real-time</em>, reset data setiap 6 bulan.</li>
+                        <li><strong class="text-indigo-700">Cocok Untuk:</strong> Bisnis dengan volume transaksi moderat atau yang baru memulai dan ingin menguji solusi aplikasi dengan investasi awal yang lebih rendah.</li>
+                        <li><strong class="text-indigo-700">Biaya Bulanan:</strong> <span class="font-bold text-indigo-800">Rp 1.600.000,- / bulan</span></li>
+                        <li><strong class="text-indigo-700">Estimasi Biaya Harian:</strong> <span class="font-bold text-indigo-800">± Rp 64.000,- / hari</span> (berdasarkan 25 hari kerja)</li>
+                    </ul>
+                    <p class="mt-8 text-indigo-800 font-bold text-2xl">
+                        Keunggulan: Pilihan paling hemat biaya untuk memulai, cocok untuk validasi konsep.
+                    </p>
+                </div>
+                <img src="https://placehold.co/300x200/6366f1/ffffff?text=Hemat+Biaya" alt="Ilustrasi Hemat Biaya" class="mx-auto mt-10 rounded-lg shadow-md">
+                <button class="nav-button mt-10" onclick="showSlide('slide8')">Lihat Perbandingan</button>
+            </div>
+        </section>
+
+        <!-- Slide 8: Perbandingan Skema (Tabel) -->
+        <section id="slide8" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-8">Perbandingan Skema</h2>
+                <div class="overflow-x-auto w-full">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Fitur / Skema</th>
+                                <th>One Stop</th>
+                                <th>One Stop Controlled</th>
+                                <th>Subscribe Mate</th>
+                                <th>Subscribe Friend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Model</strong></td>
+                                <td data-label="One Stop">Beli Putus</td>
+                                <td data-label="One Stop Controlled">Beli Putus</td>
+                                <td data-label="Subscribe Mate">Langganan Bulanan</td>
+                                <td data-label="Subscribe Friend">Langganan Bulanan</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Kepemilikan Kode</strong></td>
+                                <td data-label="One Stop">Penuh</td>
+                                <td data-label="One Stop Controlled">Penuh</td>
+                                <td data-label="Subscribe Mate">Tidak</td>
+                                <td data-label="Subscribe Friend">Tidak</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Instalasi</strong></td>
+                                <td data-label="One Stop">Ya</td>
+                                <td data-label="One Stop Controlled">Ya</td>
+                                <td data-label="Subscribe Mate">Ya</td>
+                                <td data-label="Subscribe Friend">Ya</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Hosting</strong></td>
+                                <td data-label="One Stop">Tidak Termasuk</td>
+                                <td data-label="One Stop Controlled">Tidak Termasuk</td>
+                                <td data-label="Subscribe Mate">Termasuk</td>
+                                <td data-label="Subscribe Friend">Termasuk</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Maintenance</strong></td>
+                                <td data-label="One Stop">Tidak Termasuk</td>
+                                <td data-label="One Stop Controlled">1 Tahun</td>
+                                <td data-label="Subscribe Mate">Termasuk</td>
+                                <td data-label="Subscribe Friend">Termasuk</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Penyesuaian Fitur</strong></td>
+                                <td data-label="One Stop">Mandiri</td>
+                                <td data-label="One Stop Controlled">Mandiri</td>
+                                <td data-label="Subscribe Mate">Termasuk</td>
+                                <td data-label="Subscribe Friend">Terbatas</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Kesesuaian</strong></td>
+                                <td data-label="One Stop">Ada Programmer</td>
+                                <td data-label="One Stop Controlled">Akan Ada Programmer</td>
+                                <td data-label="Subscribe Mate">Mau Berkembang</td>
+                                <td data-label="Subscribe Friend">Kebutuhan Dasar</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Biaya Bulanan</strong></td>
+                                <td data-label="One Stop">N/A</td>
+                                <td data-label="One Stop Controlled">N/A</td>
+                                <td data-label="Subscribe Mate">Rp 2 Juta/Bulan</td>
+                                <td data-label="Subscribe Friend">Rp 1.6 Juta/Bulan</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Estimasi Biaya Harian (25 hari kerja)</strong></td>
+                                <td data-label="One Stop">N/A</td>
+                                <td data-label="One Stop Controlled">N/A</td>
+                                <td data-label="Subscribe Mate">± Rp 80.000,-</td>
+                                <td data-label="Subscribe Friend">± Rp 64.000,-</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Min. Langganan</strong></td>
+                                <td data-label="One Stop">N/A</td>
+                                <td data-label="One Stop Controlled">N/A</td>
+                                <td data-label="Subscribe Mate">9 Bulan</td>
+                                <td data-label="Subscribe Friend">6 Bulan</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Fitur / Skema"><strong>Batasan</strong></td>
+                                <td data-label="One Stop">N/A</td>
+                                <td data-label="One Stop Controlled">N/A</td>
+                                <td data-label="Subscribe Mate">N/A</td>
+                                <td data-label="Subscribe Friend">Transaksi/Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-8 text-lg text-gray-700">Klik pada nama skema di tabel untuk melihat detail lebih lanjut:</p>
+                <div class="flex flex-wrap justify-center space-x-2 md:space-x-4 mt-4">
+                    <span class="table-link" onclick="showSlide('slide4')">One Stop</span>
+                    <span class="table-link" onclick="showSlide('slide5')">One Stop Controlled</span>
+                    <span class="table-link" onclick="showSlide('slide6')">Subscribe Mate</span>
+                    <span class="table-link" onclick="showSlide('slide7')">Subscribe Friend</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Bagaimana Memilih Skema yang Tepat? -->
+        <section id="slide9" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-10">Bagaimana Memilih Skema yang Tepat?</h2>
+                <p class="text-xl text-gray-700 mb-8">
+                    Pertimbangkan pertanyaan-pertanyaan kunci berikut untuk menemukan solusi terbaik bagi bisnis Anda:
+                </p>
+                <ul class="text-2xl text-gray-700 space-y-6 list-none p-0">
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">❓</span>
+                        Apakah Anda memiliki tim programmer internal yang siap mengelola kode?
+                    </li>
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">🚀</span>
+                        Seberapa cepat Anda berencana untuk mengembangkan bisnis dan fitur aplikasi di masa depan?
+                    </li>
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">💸</span>
+                        Berapa anggaran awal yang Anda siapkan untuk investasi teknologi?
+                    </li>
+                    <li class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4 text-3xl">⏱️</span>
+                        Apakah Anda membutuhkan pembaruan data secara <em class="font-italic">real-time</em> dan mampu menangani volume transaksi tinggi?
+                    </li>
+                </ul>
+                <img src="https://placehold.co/350x250/6366f1/ffffff?text=Pilih+Solusi+Tepat" alt="Ilustrasi Pilih Solusi Tepat" class="mx-auto mt-12 rounded-lg shadow-md">
+            </div>
+        </section>
+
+        <!-- Slide 10: Hubungi Kami & Gemini API Integration -->
+        <section id="slide10" class="slide">
+            <div class="slide-content">
+                <h2 class="text-5xl font-bold text-indigo-600 mb-10">Hubungi Kami</h2>
+                <p class="text-xl text-gray-700 mb-8">
+                    Kami siap mendengarkan kebutuhan spesifik Anda dan membantu Anda menemukan skema penawaran yang paling sesuai.
+                </p>
+
+                <div class="space-y-6 text-2xl text-gray-800 mb-12">
+                    <p class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4">🏢</span>
+                        <strong class="text-indigo-700">Nama Perusahaan:</strong> [Nama Perusahaan Anda]
+                    </p>
+                    <p class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4">🌐</span>
+                        <strong class="text-indigo-700">Website:</strong> <a href="#" class="text-indigo-500 hover:underline">www.websiteanda.com</a>
+                    </p>
+                    <p class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4">✉️</span>
+                        <strong class="text-indigo-700">Email:</strong> <a href="mailto:info@emailanda.com" class="text-indigo-500 hover:underline">info@emailanda.com</a>
+                    </p>
+                    <p class="flex items-center justify-center">
+                        <span class="text-indigo-500 mr-4">📞</span>
+                        <strong class="text-indigo-700">Telepon:</strong> +62 812-3456-7890
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 p-8 rounded-xl shadow-lg mt-10 w-full max-w-2xl mx-auto">
+                    <h3 class="text-3xl font-bold text-blue-700 mb-6">Butuh Bantuan Lebih Lanjut?</h3>
+                    <p class="text-lg text-gray-700 mb-6">
+                        Jelaskan kebutuhan atau pertanyaan Anda di bawah, dan biarkan AI kami membantu Anda!
+                    </p>
+                    <textarea id="userNeedsInput" class="w-full p-4 border border-gray-300 rounded-lg mb-6 focus:ring-blue-500 focus:border-blue-500 text-gray-900" rows="6" placeholder="Contoh: Kami adalah startup dengan 3 programmer internal, ingin meluncurkan MVP dalam 6 bulan dan butuh fleksibilitas untuk penyesuaian fitur setelahnya."></textarea>
+                    <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 mb-6">
+                        <button id="suggestSchemeButton" class="nav-button bg-blue-600 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            ✨ Saran Skema Terbaik ✨
+                        </button>
+                        <button id="draftQuestionButton" class="nav-button bg-green-600 hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                            ✨ Draf Pertanyaan Cepat ✨
+                        </button>
+                    </div>
+                    <div id="llmResponse" class="mt-6 p-4 bg-white border border-blue-200 rounded-lg text-left text-gray-800 min-h-[80px] flex items-center justify-center">
+                        <p class="text-gray-500">Hasil saran atau draf akan muncul di sini.</p>
+                    </div>
+                    <div id="loadingIndicator" class="hidden mt-4 text-blue-600 font-semibold">
+                        Memuat... Mohon tunggu.
+                    </div>
+                </div>
+                <button class="nav-button mt-12" onclick="showSlide('slide1')">Kembali ke Awal</button>
+            </div>
+        </section>
+
+        <!-- Tombol Navigasi -->
+        <div class="navigation-buttons">
+            <button id="prevButton" class="nav-button" disabled>Sebelumnya</button>
+            <button id="nextButton" class="nav-button">Selanjutnya</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlideIndex = 0;
+
+        // Fungsi untuk menampilkan slide tertentu
+        function showSlide(slideId) {
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            const targetSlide = document.getElementById(slideId);
+            if (targetSlide) {
+                targetSlide.classList.add('active');
+                currentSlideIndex = Array.from(slides).indexOf(targetSlide);
+                updateNavigationButtons();
+            }
+        }
+
+        // Fungsi untuk memperbarui status tombol navigasi (enabled/disabled)
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+
+            prevButton.disabled = currentSlideIndex === 0;
+            nextButton.disabled = currentSlideIndex === slides.length - 1;
+        }
+
+        // Event listener untuk tombol "Selanjutnya"
+        document.getElementById('nextButton').addEventListener('click', () => {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                showSlide(slides[currentSlideIndex].id);
+            }
+        });
+
+        // Event listener untuk tombol "Sebelumnya"
+        document.getElementById('prevButton').addEventListener('click', () => {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(slides[currentSlideIndex].id);
+            }
+        });
+
+        // Tampilkan slide pertama saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            showSlide(slides[currentSlideIndex].id);
+
+            // Gemini API Integration Logic
+            const userNeedsInput = document.getElementById('userNeedsInput');
+            const suggestSchemeButton = document.getElementById('suggestSchemeButton');
+            const draftQuestionButton = document.getElementById('draftQuestionButton');
+            const llmResponseDiv = document.getElementById('llmResponse');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            const API_KEY = ""; // Canvas will automatically provide the API key at runtime
+
+            const schemesDescription = `
+                Skema 1: One Stop (Beli putus, semua program akan diserahkan dan akan dibantu instalasi [tidak termasuk hosting] - cocok jika ada programmer internal, ± 50jt)
+                Skema 2: One Stop Controlled (Beli putus, tapi 1 tahun maintenance - cocok jika belum ada programmer tapi mau diadakan, ± 60jt)
+                Skema 3: Subscribe Mate (Langganan bulanan, minimal langganan awal itu 9 bulan, sudah termasuk maintenance dan penyesuaian fitur, 2jt/bulan atau sekitar 80rb/hari berdasarkan 25 hari kerja)
+                Skema 4: Subscribe Friend (mirip dengan skema 3 tapi ada limit 80 harian transaksi, dan data tidak realtime, 6 bulan sekali direstart - minimal langganan 6bulan, 1.6jt/bulan atau sekitar 64rb/hari berdasarkan 25 hari kerja)
+            `;
+
+            async function callGeminiAPI(prompt, type) {
+                loadingIndicator.classList.remove('hidden');
+                llmResponseDiv.innerHTML = '<p class="text-gray-500">Memuat... Mohon tunggu.</p>';
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        llmResponseDiv.innerHTML = `<p>${text}</p>`;
+                    } else {
+                        llmResponseDiv.innerHTML = '<p class="text-red-500">Maaf, tidak dapat menghasilkan respons. Coba lagi.</p>';
+                        console.error('Unexpected API response structure:', result);
+                    }
+                } catch (error) {
+                    llmResponseDiv.innerHTML = '<p class="text-red-500">Terjadi kesalahan saat menghubungi layanan AI. Silakan coba lagi nanti.</p>';
+                    console.error('Error calling Gemini API:', error);
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+
+            suggestSchemeButton.addEventListener('click', () => {
+                const userNeeds = userNeedsInput.value.trim();
+                if (userNeeds) {
+                    const prompt = `Sebagai konsultan bisnis, saya memiliki empat skema penawaran layanan pengembangan aplikasi:
+                    ${schemesDescription}
+                    Berdasarkan deskripsi kebutuhan klien berikut: "${userNeeds}", skema manakah yang paling cocok dan mengapa? Jelaskan secara ringkas dan profesional.`;
+                    callGeminiAPI(prompt, 'scheme_suggestion');
+                } else {
+                    llmResponseDiv.innerHTML = '<p class="text-red-500">Mohon masukkan kebutuhan Anda terlebih dahulu.</p>';
+                }
+            });
+
+            draftQuestionButton.addEventListener('click', () => {
+                const userText = userNeedsInput.value.trim();
+                if (userText) {
+                    const prompt = `Sebagai asisten komunikasi, ubah teks berikut menjadi pertanyaan singkat dan jelas untuk keperluan inquiry penjualan atau pertanyaan awal kepada penyedia layanan. Fokus pada kejelasan dan keringkasan: "${userText}"`;
+                    callGeminiAPI(prompt, 'question_draft');
+                } else {
+                    llmResponseDiv.innerHTML = '<p class="text-red-500">Mohon masukkan teks untuk didraf terlebih dahulu.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
